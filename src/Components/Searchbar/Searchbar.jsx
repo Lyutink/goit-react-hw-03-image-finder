@@ -34,12 +34,12 @@ class Searchbar extends Component {
     event.preventDefault();
 
     this.props.onSubmit(this.state);
-    // this.reset();
+    this.reset();
   };
 
-  // reset = () => {
-  //       this.setState({ requestFromUsere: ''});
-  // }
+  reset = () => {
+    this.setState({ requestFromUser: "" });
+  };
 
   render() {
     return (
