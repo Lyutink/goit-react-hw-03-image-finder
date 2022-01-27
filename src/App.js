@@ -34,12 +34,17 @@ class App extends Component {
   // return axios.get(`?key=${API_Key}&q=${nextRequestFromUser}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${per_page}`);
   // }
 
+  handlerLoaderMore = () => {
+    this.setState((prevState) => ({ page: prevState.page + 1 }));
+  };
+
   componentDidUpdate(prevProps, prevState) {
     const prevRequestFromUser = prevState.requestFromUser;
     const nextRequestFromUser = this.state.requestFromUser;
+    const prevPage = prevState.page;
     const newPage = this.state.page;
 
-    if (prevRequestFromUser !== nextRequestFromUser) {
+    if (prevRequestFromUser !== nextRequestFromUser || prevPage !== newPage) {
       this.setState({ status: "pending" });
 
       fetchImages(nextRequestFromUser, newPage)
@@ -56,7 +61,10 @@ class App extends Component {
             return;
           }
           console.log("response.data.hits", imagesArr);
-          this.setState({ images: [...imagesArr], status: "resolved" });
+          this.setState({
+            images: [...this.state.images, ...imagesArr],
+            status: "resolved",
+          });
         })
         .catch((error) => this.setState({ error, status: "rejected" }));
     }
@@ -77,7 +85,7 @@ class App extends Component {
             {status === "resolved" && (
               <>
                 <ImageGallery images={images} />
-                <Button></Button>
+                <Button type="button" onClick={this.handlerLoaderMore}></Button>
               </>
             )}
           </>

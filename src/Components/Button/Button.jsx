@@ -3,6 +3,6 @@
 //  Кнопка должна рендерится только тогда, когда есть
 // какие - то загруженные изобаржения.Если массив изображений пуст,
 //     кнопка не рендерится.
-export default function Button() {
-  return <button>Load</button>;
+export default function Button({ onClick }) {
+  return <button onClick={onClick}>Load more</button>;
 }
