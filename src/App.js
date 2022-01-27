@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 //import axios from "axios";
 //import * as HTTPServise from './fetchImages';
-//import Notiflix from 'notiflix';
+import Notiflix from "notiflix";
 import "./App.css";
 
 import { fetchImages } from "./services/fetchImages";
 import Searchbar from "./Components/Searchbar/Searchbar";
+import ImageGallery from "./Components/ImageGallery/ImageGallery";
+import Loader from "./Components/Loader/Loader";
+import Button from "./Components/Button/Button";
 // 'edle' стоит на месте, простой
 // 'pending' ожидается выполнения
 // 'resolved' выполнилось с результатом
@@ -37,72 +40,51 @@ class App extends Component {
     const newPage = this.state.page;
 
     if (prevRequestFromUser !== nextRequestFromUser) {
-      this.setState({ status: "edle" }); // pending
+      this.setState({ status: "pending" });
 
-      fetchImages(nextRequestFromUser, newPage).then((response) => {
-        console.log("respons", response.data);
-        const imagesArr = response.data.hits;
-        console.log("response.data.hits", imagesArr);
-        this.setState({ images: [...imagesArr] });
-      });
-      //.then(response => {
-      //   if (response.ok) {
-      //     console.log("respons", response.json());
-      //     return response.json();
-      //   }
-      //   return Promise.reject(
-      //     new Error('Нет такой картинки'),
-      //   );
-      // })
-      //   .then(images => this.setState({ images: [...images], status: 'resolved' }))
-      // .catch(error => this.setState({ error, status: 'rejected' }))
-      // console.log("oooooooooooooooo");
-      // fetch(`https://pixabay.com/api/?key=${API_Key}&q=${nextRequestFromUser}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.state.page}&per_page=12`)
-      //   .then(response => {
-      //     if (response.ok) {
-      //       console.log("respons", response.json());
-      //       return response.json();
-      //     }
+      fetchImages(nextRequestFromUser, newPage)
+        .then((response) => {
+          console.log("respons", response.data);
+          const imagesArr = response.data.hits;
+          console.log("imagesArr", imagesArr.length);
 
-      //     return Promise.reject(
-      //       new Error('Нет такой картинки'),
-      //     );
-      //   })
-      //   .then()
-      //   .catch(error => this.setState({ error }))
-      //}
+          if (!imagesArr.length) {
+            Notiflix.Notify.failure(
+              "Sorry, there are no images matching your search query. Please try again."
+            );
+            this.setState({ status: "rejected", images: [] });
+            return;
+          }
+          console.log("response.data.hits", imagesArr);
+          this.setState({ images: [...imagesArr], status: "resolved" });
+        })
+        .catch((error) => this.setState({ error, status: "rejected" }));
     }
   }
 
   render() {
-    //const (status, ) = this.state;
+    const { status, images } = this.state;
     if (this.state.status === "edle") {
       console.log("ffff");
     }
 
-    return <Searchbar onSubmit={this.handlerSubmit} />;
+    return (
+      <>
+        <Searchbar onSubmit={this.handlerSubmit} />
+        {status !== "edle" && status !== "rejected" && (
+          <>
+            {status === "pending" && <Loader />}
+            {status === "resolved" && (
+              <>
+                <ImageGallery images={images} />
+                <Button></Button>
+              </>
+            )}
+          </>
+        )}
+      </>
+    );
   }
 }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
 
 export default App;
