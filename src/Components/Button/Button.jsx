@@ -1,8 +1,14 @@
-// При нажатии на кнопку Load more должна догружаться следующая
-//  порция изображений и рендериться вместе с предыдущими.
-//  Кнопка должна рендерится только тогда, когда есть
-// какие - то загруженные изобаржения.Если массив изображений пуст,
-//     кнопка не рендерится.
+import PropTypes from "prop-types";
+import { ButtonLoade, ButtonLoadeMore } from "./Button.styled";
+
 export default function Button({ onClick }) {
-  return <button onClick={onClick}>Load more</button>;
+  return (
+    <ButtonLoade>
+      <ButtonLoadeMore onClick={onClick}>Load more</ButtonLoadeMore>;
+    </ButtonLoade>
+  );
 }
+
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};

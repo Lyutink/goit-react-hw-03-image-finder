@@ -1,17 +1,29 @@
-// Список карточек изображений. Создает DOM-элемент следующей структуры.
+import PropTypes from "prop-types";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
+
+import { ImageGalleryContainer } from "./ImageGallery.styled";
 
 export default function ImageGallery({ images }) {
   return (
-    <ul>
-      {images.map(({ id, previewURL, pageURL, alt }) => (
+    <ImageGalleryContainer>
+      {images.map(({ id, previewURL, webformatURL, largeImageURL }) => (
         <ImageGalleryItem
           key={id}
           previewURL={previewURL}
-          img={pageURL}
-          alt={alt}
+          img={webformatURL}
+          largeImageURL={largeImageURL}
         />
       ))}
-    </ul>
+    </ImageGalleryContainer>
   );
 }
+
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      previewURL: PropTypes.string.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+    })
+  ),
+};

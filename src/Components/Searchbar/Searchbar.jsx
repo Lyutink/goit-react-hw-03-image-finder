@@ -1,32 +1,23 @@
-// Компонент принимает один проп onSubmit - функцию для
-// передачи значения инпута при сабмите формы.
-//Создает DOM - элемент следующей структуры.
 import React, { Component } from "react";
-// <header class="searchbar">
-//   <form class="form">
-//     <button type="submit" class="button">
-//       <span class="button-label">Search</span>
-//     </button>
+import PropTypes from "prop-types";
 
-//     <input
-//       class="input"
-//       type="text"
-//       autocomplete="off"
-//       autofocus
-//       placeholder="Search images and photos"
-//     />
-//   </form>
-// </header>{
+import {
+  SearchbarConteiner,
+  SearchForm,
+  SearchFormButton,
+  SearchFormInput,
+  SearchFormButtonLabel,
+} from "./Searchbar.styled";
+import { ReactComponent as SearchIcon } from "../../icons/search.svg";
+
 class Searchbar extends Component {
+  static propTypes = { onSubmit: PropTypes.func.isRequired };
+
   state = {
     requestFromUser: "",
   };
 
   handleChange = (event) => {
-    // this.setState({
-    //     [event.currentTarget.name]: event.currentTarget.value,
-    // });
-    console.log(event.currentTarget.value);
     this.setState({ requestFromUser: event.currentTarget.value });
   };
 
@@ -34,30 +25,27 @@ class Searchbar extends Component {
     event.preventDefault();
 
     this.props.onSubmit(this.state);
-    this.reset();
-  };
-
-  reset = () => {
-    this.setState({ requestFromUser: "" });
   };
 
   render() {
     return (
-      <header>
-        <form onSubmit={this.handleSubmit}>
-          <button type="submit">
-            <span>Search</span>
-          </button>
+      <SearchbarConteiner>
+        <SearchForm onSubmit={this.handleSubmit}>
+          <SearchFormButton type="submit">
+            <SearchFormButtonLabel>Search</SearchFormButtonLabel>
+            <SearchIcon fill="darkgray" width="24" />
+          </SearchFormButton>
 
-          <input
+          <SearchFormInput
             onChange={this.handleChange}
+            value={this.state.requestFromUser}
             type="text"
-            //autocomplete="off"
-            //autofocus
+            autocomplete="off"
+            autoFocus
             placeholder="Search images and photos"
           />
-        </form>
-      </header>
+        </SearchForm>
+      </SearchbarConteiner>
     );
   }
 }
